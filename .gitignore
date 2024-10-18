@@ -1,2 +1,4 @@
 .cache/*
 environ.sh
+__pycache__/*
+playground.ipynb
