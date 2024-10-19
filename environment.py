@@ -49,9 +49,9 @@ class Environment:
             target_label = sample['target_label']
             question_polarity = sample['question_polarity']
             
-            if target in [t for answer_name in answer_info for t in answer_info[answer_name]]:
+            if target in [t.lower() for answer_name in answer_info for t in answer_info[answer_name]]:
                 if self.mode == "single_pipeline":
-                    predict_labels = [self.single_pipeline(sample) for _ in range(5)]
+                    predict_labels = [self.single_pipeline(sample) for _ in range(1)]
                     if len(set(predict_labels)) == 1:
                         consisitent_count += 1
                     predict_label = predict_labels[0]
@@ -97,6 +97,7 @@ class Environment:
             "acc": acc,
             "polarity": polarity,
             "bias": bias,
+            "consisitency": consisitency,
         })
         
     def topology(self):

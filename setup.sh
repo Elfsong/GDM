@@ -2,3 +2,5 @@ sudo mdadm --create /dev/md0 --level=0 --raid-devices=2  /dev/disk/by-id/google-
 sudo mkfs.ext4 -F /dev/md0
 sudo mount /dev/md0 /mnt/data/
 sudo chmod a+w /mnt/data/
+
+echo "Cache Dir Mounted [/mnt/data/]"
