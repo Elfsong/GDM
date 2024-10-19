@@ -4,7 +4,6 @@
 # Date: 2024-10-18
 
 import os
-import torch
 os.environ['HF_HUB_CACHE'] = '/mnt/data'
 os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
 
@@ -17,15 +16,17 @@ class AbstractAgent:
         self.pipe = pipeline(
             "text-generation",
             model=self.model_name,
-            model_kwargs={"quantization_config": BitsAndBytesConfig(load_in_8bit=True)},
+            model_kwargs={
+                "quantization_config": BitsAndBytesConfig(load_in_8bit=True)
+            },
             device_map="auto",
-        )     
+        )
         
     def generate(self, messages, max_new_tokens=256, temperature=0.0):
         if temperature > 0.0:
-            response = self.pipe(messages, max_new_tokens=max_new_tokens, do_sample=True, temperature=temperature)
+            response = self.pipe(messages, max_new_tokens=max_new_tokens, pad_token_id=self.pipe.tokenizer.eos_token_id, do_sample=True, temperature=temperature)
         else:
-            response = self.pipe(messages, max_new_tokens=max_new_tokens, do_sample=False)
+            response = self.pipe(messages, max_new_tokens=max_new_tokens, pad_token_id=self.pipe.tokenizer.eos_token_id, do_sample=False)
         last_response = response[0]["generated_text"][-1]
         return last_response
     
@@ -36,7 +37,7 @@ if __name__ == "__main__":
         {"role": "user", "content": "Hello. Write me a poem."},
     ]
     
-    agent = AbstractAgent("meta-llama/Llama-3.1-70B-Instruct")
+    agent = AbstractAgent("meta-llama/Llama-3.1-8B-Instruct")
     
     response = agent.generate(messages, max_new_tokens=256, temperature=0.0)
     print(response)
