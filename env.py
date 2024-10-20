@@ -97,6 +97,12 @@ class Environment:
             
         return predict_label
     
+    def debate_pipeline(self, sample, pipeline_config):
+        pass
+    
+    def committee_pipeline(self, sample, pipeline_config):
+        pass
+    
     def evaluate(self, domain, pipeline_config):
         total_count, natural_count, bias_count = 0, 0, 0
         
@@ -111,6 +117,10 @@ class Environment:
                 predict_label = self.sequential_pipeline(sample, pipeline_config)
             elif self.mode == "voting_pipeline":
                 predict_label = self.voting_pipeline(sample, pipeline_config)
+            elif self.mode == "debate_pipeline":
+                predict_label = self.debate_pipeline(sample, pipeline_config)
+            elif self.mode == "committee_pipeline":
+                predict_label = self.committee_pipeline(sample, pipeline_config)
             else:
                 raise ValueError(f"Invalid mode: {self.mode}")
             
