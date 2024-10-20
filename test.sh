@@ -20,6 +20,8 @@ python environment.py --mode single_pipeline --target boy --domain gender_identi
 python environment.py --mode single_pipeline --target girl --domain gender_identity
 python environment.py --mode single_pipeline --target man --domain gender_identity
 python environment.py --mode single_pipeline --target woman --domain gender_identity
+python environment.py --mode single_pipeline --target M --domain gender_identity
+python environment.py --mode single_pipeline --target F --domain gender_identity
 
 # ===========================================
 # nationality
