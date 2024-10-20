@@ -16,7 +16,6 @@ python environment.py --mode single_pipeline --target trans --domain gender_iden
 python environment.py --mode single_pipeline --target nonTrans --domain gender_identity
 python environment.py --mode single_pipeline --target trans_M --domain gender_identity
 python environment.py --mode single_pipeline --target trans_F --domain gender_identity
-python environment.py --mode single_pipeline --target nonTrans_F --domain gender_identity
 python environment.py --mode single_pipeline --target boy --domain gender_identity
 python environment.py --mode single_pipeline --target girl --domain gender_identity
 python environment.py --mode single_pipeline --target man --domain gender_identity
