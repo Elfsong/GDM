@@ -58,7 +58,7 @@ class LlamaAgent(BaseAgent):
     
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
-        return model_output
+        return model_output['content']
     
 class MixtralAgent(BaseAgent):
     def __init__(self, model_name):
@@ -74,7 +74,7 @@ class MixtralAgent(BaseAgent):
     
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
-        return model_output
+        return model_output['content']
     
 class QwenAgent(BaseAgent):
     def __init__(self, model_name):
@@ -90,7 +90,7 @@ class QwenAgent(BaseAgent):
     
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
-        return model_output
+        return model_output['content']
     
 class YiAgent(BaseAgent):
     def __init__(self, model_name):
@@ -107,7 +107,7 @@ class YiAgent(BaseAgent):
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
         model_output['content'] = model_output['content'].split("\n\n")[0].strip()
-        return model_output
+        return model_output['content']
 
 class BloomAgent(BaseAgent):
     def __init__(self, model_name):
@@ -120,7 +120,7 @@ class BloomAgent(BaseAgent):
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"]
         model_output = model_output.split("\n\n")[1].strip()
-        return {"role": "assistant", "content": model_output}
+        return model_output
 
 class FalconAgent(BaseAgent):
     def __init__(self, model_name):
@@ -134,7 +134,7 @@ class FalconAgent(BaseAgent):
         model_output = model_output[0]["generated_text"]
         print(model_output)
         model_output = model_output.split("\n\n")[1].strip()
-        return {"role": "assistant", "content": model_output}
+        return model_output
     
 class CohereAgent(BaseAgent):
     def __init__(self, model_name):
@@ -150,7 +150,7 @@ class CohereAgent(BaseAgent):
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
         model_output['content'] = model_output['content'].split("\n\n")[0].strip()
-        return model_output
+        return model_output['content']
     
 class GraniteAgent(BaseAgent):
     def __init__(self, model_name):
@@ -190,7 +190,7 @@ class PhiAgent(BaseAgent):
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
         model_output['content'] = model_output['content'].split("\n\n")[0].strip()
-        return model_output
+        return model_output['content']
     
 class DeepSeekAgent(BaseAgent):
     def __init__(self, model_name):
@@ -255,8 +255,7 @@ class GemmaAgent(BaseAgent):
         model_output = model_output[0]["generated_text"][-1]
         content = model_output['content']
         content = content.strip('` \n')[5:]
-        model_output['content'] = content
-        return model_output
+        return content
 
 class SarvamAgent(BaseAgent):
     def __init__(self, model_name):
@@ -297,7 +296,7 @@ if __name__ == "__main__":
             2) {answers['ans2']}\n
         """
     
-    agent = LlamaAgent("meta-llama/Llama-3.1-8B-Instruct")
+    # agent = LlamaAgent("meta-llama/Llama-3.1-8B-Instruct")
     # agent = MixtralAgent("mistralai/Mixtral-8x7B-Instruct-v0.1")
     # agent = QwenAgent("Qwen/Qwen2-7B-Instruct")
     # agent = YiAgent("01-ai/Yi-1.5-6B-Chat")
