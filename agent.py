@@ -50,7 +50,6 @@ class BBQEvaluator:
 class BaseAgent:
     def __init__(self, model_name):
         self.model_name = model_name
-        self.bias_evaluator = BBQEvaluator()
         self.pipe = pipeline(
             "text-generation",
             model=self.model_name,
