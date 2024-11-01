@@ -11,8 +11,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--model-type", "SarvamAgent", 
-                "--model-name", "sarvamai/sarvam-1", 
+                "--model-type", "LlamaAgent", 
+                "--model-name", "meta-llama/Llama-3.1-8B-Instruct", 
                 "--domain", "all"
             ]
         }
