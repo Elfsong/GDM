@@ -11,8 +11,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--model-type", "MixtralAgent", 
-                "--model-name", "mistralai/Mixtral-8x7B-Instruct-v0.1", 
+                "--model-type", "SarvamAgent", 
+                "--model-name", "sarvamai/sarvam-1", 
                 "--domain", "all"
             ]
         }
