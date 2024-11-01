@@ -1,79 +1,39 @@
-# age
-# {'unknown', 'old', 'nonOld'}
-python environment.py --mode single_pipeline --target old --domain age
-python environment.py --mode single_pipeline --target nonold --domain age
+# LlamaAgent
+python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-8B-Instruct --domain all
+python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct --domain all
 
-# ===========================================
-# disability_status
-# {'unknown', 'nonDisabled', 'disabled'}
-python environment.py --mode single_pipeline --target disabled --domain disability_status
-python environment.py --mode single_pipeline --target nonDisabled --domain disability_status
+# MixtralAgent
+python crowd.py --model-type MixtralAgent --model-name mistralai/Mixtral-8x7B-Instruct-v0.1 --domain all    
 
-# ===========================================
-# gender_identity
-# {'girl', 'nonTrans_M', 'trans_M', 'nonTrans', 'nonTrans_F', 'man', 'M', 'trans_F', 'trans', 'F', 'unknown', 'woman', 'boy'}
-python environment.py --mode single_pipeline --target trans --domain gender_identity
-python environment.py --mode single_pipeline --target nonTrans --domain gender_identity
-python environment.py --mode single_pipeline --target trans_M --domain gender_identity
-python environment.py --mode single_pipeline --target trans_F --domain gender_identity
-python environment.py --mode single_pipeline --target boy --domain gender_identity
-python environment.py --mode single_pipeline --target girl --domain gender_identity
-python environment.py --mode single_pipeline --target man --domain gender_identity
-python environment.py --mode single_pipeline --target woman --domain gender_identity
-python environment.py --mode single_pipeline --target M --domain gender_identity
-python environment.py --mode single_pipeline --target F --domain gender_identity
+# QwenAgent
+python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2-7B-Instruct --domain all
 
-# ===========================================
-# nationality
-# {'AsiaPacific', 'NorthAmerica', 'MiddleEast', 'ArabStates', 'LatinSouthAmerica', 'Africa', 'Europe', 'unknown'}
-python environment.py --mode single_pipeline --target AsiaPacific --domain nationality
-python environment.py --mode single_pipeline --target NorthAmerica --domain nationality
-python environment.py --mode single_pipeline --target MiddleEast --domain nationality
-python environment.py --mode single_pipeline --target ArabStates --domain nationality
-python environment.py --mode single_pipeline --target LatinSouthAmerica --domain nationality
-python environment.py --mode single_pipeline --target Africa --domain nationality
-python environment.py --mode single_pipeline --target Europe --domain nationality
+# YiAgent
+python crowd.py --model-type YiAgent --model-name 01-ai/Yi-1.5-6B-Chat --domain all 
 
-# ===========================================
-# physical_appearance
-# {'noVisibleDifference', 'notPregnant', 'posDress', 'obese', 'tall', 'negDress', 'pregnant', 'nonObese', 'visibleDifference', 'unknown', 'short'}
-python environment.py --mode single_pipeline --target noVisibleDifference --domain physical_appearance
-python environment.py --mode single_pipeline --target notPregnant --domain physical_appearance
-python environment.py --mode single_pipeline --target posDress --domain physical_appearance
-python environment.py --mode single_pipeline --target obese --domain physical_appearance
-python environment.py --mode single_pipeline --target tall --domain physical_appearance
-python environment.py --mode single_pipeline --target negDress --domain physical_appearance
-python environment.py --mode single_pipeline --target pregnant --domain physical_appearance
-python environment.py --mode single_pipeline --target nonObese --domain physical_appearance
-python environment.py --mode single_pipeline --target visibleDifference --domain physical_appearance
-python environment.py --mode single_pipeline --target unknown --domain physical_appearance
-python environment.py --mode single_pipeline --target short --domain physical_appearance
+# DeepSeekAgent
+python crowd.py --model-type DeepSeekAgent --model-name deepseek-ai/DeepSeek-V2-Lite-Chat --domain all
 
-# ===========================================
-# religion
-# {'Hindu', 'Sikh', 'Muslim', 'Mormon', 'Jewish', 'Catholic', 'Protestant', 'Atheist', 'unknown', 'Buddhist', 'Christian'}
-python environment.py --mode single_pipeline --target Hindu --domain religion
-python environment.py --mode single_pipeline --target Sikh --domain religion
-python environment.py --mode single_pipeline --target Muslim --domain religion
-python environment.py --mode single_pipeline --target Mormon --domain religion
-python environment.py --mode single_pipeline --target Jewish --domain religion
-python environment.py --mode single_pipeline --target Catholic --domain religion
-python environment.py --mode single_pipeline --target Protestant --domain religion
-python environment.py --mode single_pipeline --target Atheist --domain religion
-python environment.py --mode single_pipeline --target Buddhist --domain religion
-python environment.py --mode single_pipeline --target Christian --domain religion
+# GemmaAgent
+python crowd.py --model-type GemmaAgent --model-name google/gemma-2-2b-it --domain all
 
-# ===========================================
-# ses
-# {'lowSES', 'highSES', 'unknown'}
-python environment.py --mode single_pipeline --target lowSES --domain ses
-python environment.py --mode single_pipeline --target highSES --domain ses
+# DollyAgent
+python crowd.py --model-type DollyAgent --model-name Databricks/dolly-v2-3b --domain all
 
-# ===========================================
-# sexual_orientation
-# {'gay', 'pansexual', 'lesbian', 'straight', 'bisexual', 'unknown'}
-python environment.py --mode single_pipeline --target gay --domain sexual_orientation
-python environment.py --mode single_pipeline --target pansexual --domain sexual_orientation
-python environment.py --mode single_pipeline --target lesbian --domain sexual_orientation
-python environment.py --mode single_pipeline --target straight --domain sexual_orientation
-python environment.py --mode single_pipeline --target bisexual --domain sexual_orientation
+# FalconAgent
+python crowd.py --model-type FalconAgent --model-name tiiuae/falcon-40b-instruct --domain all   
+
+# BloomAgent
+python crowd.py --model-type BloomAgent --model-name bigscience/bloomz-7b1 --domain all
+
+# CohereAgent
+python crowd.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-8b --domain all
+
+# GraniteAgent
+python crowd.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-8b-instruct --domain all
+
+# PhiAgent
+python crowd.py --model-type PhiAgent --model-name microsoft/phi-3.5-mini-instruct --domain all
+
+# SarvamAgent
+python crowd.py --model-type SarvamAgent --model-name sarvamai/sarvam-1 --domain all

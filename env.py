@@ -7,7 +7,7 @@ import json
 import wandb
 import argparse
 from tqdm import tqdm
-from agent import AbstractAgent
+from crowd import AbstractAgent
 from datasets import load_dataset
 
 
