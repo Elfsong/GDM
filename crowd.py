@@ -4,8 +4,8 @@
 # Date: 2024-10-28
 
 import os
-# os.environ['HF_HUB_CACHE'] = '/mnt/data'
-# os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
+os.environ['HF_HUB_CACHE'] = '/mnt/data'
+os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
 
 import re
 import json
@@ -33,7 +33,7 @@ class BBQEvaluator:
         result_dataset.push_to_hub("Elfsong/CrowdEval", self.agent.model_name.replace("/", "-"), split=domain)
     
     def evaluate(self, domain):  
-        self.ds = load_dataset("Elfsong/BBQ", split=f'{domain}[:500]')
+        self.ds = load_dataset("Elfsong/BBQ", split=f'{domain}[:20]')
         for sample in tqdm(self.ds, desc=f"Evaluating [{domain}]..."):
             if sample['context_condition'] != "ambig": continue
             self.total_count += 1
@@ -86,6 +86,15 @@ class BaseAgent:
             trust_remote_code=True,
         )
         
+    def get_json_str(self, content):
+        json_pattern = re.compile(r'\{(.*?)\}')
+        match = json_pattern.search(content)
+        if match:
+            raw_json_str = match.group(0).replace("\\", "")
+            return json.loads(raw_json_str)
+        else:
+            raise ValueError("No JSON string found")
+        
     def preprocess(self, model_input):
         return model_input
     
@@ -95,6 +104,7 @@ class BaseAgent:
     def inference(self, messages, max_new_tokens, temperature):
         do_sample = temperature > 0.0
         if not do_sample:
+            self.pipe.temperature=None
             self.pipe.model.generation_config.temperature=None
             self.pipe.model.generation_config.top_p=None
 
@@ -154,8 +164,8 @@ class MixtralAgent(BaseAgent):
         return messages
     
     def postprocess(self, model_output):
-        model_output = model_output[0]["generated_text"][-1]
-        return model_output['content']
+        model_output = self.get_json_str(model_output[0]["generated_text"][-1]['content'])
+        return int(model_output['answer_id'])
     
 class QwenAgent(BaseAgent):
     def __init__(self, model_name):
@@ -187,8 +197,10 @@ class YiAgent(BaseAgent):
     
     def postprocess(self, model_output):
         model_output = model_output[0]["generated_text"][-1]
-        model_output['content'] = model_output['content'].split("\n\n")[0].strip()
-        return model_output['content']
+        content = model_output['content'].split("\n\n")[0].strip()
+        content = content.split("\n")[0].strip()
+        content = json.loads(content)
+        return int(content['answer_id'])
 
 class BloomAgent(BaseAgent):
     def __init__(self, model_name):
