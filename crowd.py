@@ -52,7 +52,7 @@ class BBQEvaluator:
         self.ds = self.ds.map(lambda sample: {"model_output": self.agent.inference(sample['model_input'], max_new_tokens=64, temperature=0.0)}, batched=True, batch_size=self.batch_size)
         
         print(f"[+] Repsonse Parsing...")
-        self.ds = self.ds.map(lambda sample: {"predict_label": self.agent.postprocess_impl(sample['model_output'])}, batched=False)
+        self.ds = self.ds.map(lambda sample: {"predict_label": self.agent.postprocess(sample['model_output'])}, batched=False)
         
         print(f"[+] Evaluating [{domain}]...")
         for sample in tqdm(self.ds, desc=f"Evaluating [{domain}]..."):
@@ -109,15 +109,15 @@ class BaseAgent:
         else:
             raise ValueError("No JSON string found")
         
-    def preprocess(self, model_input):
-        return model_input
+    def preprocess(self, query):
+        return query
     
     def postprocess(self, model_output):
         predict_label = -1
         try:
             predict_label = self.postprocess_impl(model_output)
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error: {e} <- [{model_output}]")
         return predict_label
 
     def inference(self, model_inputs, max_new_tokens, temperature):
@@ -205,10 +205,6 @@ class YiAgent(BaseAgent):
         return model_input
     
     def postprocess_impl(self, model_output):
-        # model_output = model_output[0]["generated_text"][-1]
-        # content = model_output['content'].split("\n\n")[0].strip()
-        # content = content.split("\n")[0].strip()
-        # content = json.loads(content)
         model_output = self.get_json_str(model_output[0]["generated_text"][-1]['content'])
         return int(model_output['answer_id'])
 
@@ -416,7 +412,7 @@ if __name__ == "__main__":
     parser.add_argument('--model-type', type=str, required=True, help='Type of the model to use')
     parser.add_argument('--model-name', type=str, required=True, help='Name of the model to use')
     parser.add_argument('--domain', type=str, default="all", help='Domain to evaluate')
-    parser.add_argument('--batch-size', type=int, default=16, help='Batch size')
+    parser.add_argument('--batch-size', type=int, default=32, help='Batch size')
     parser.add_argument('--num-samples', type=int, default=256, help='Number of samples')
     args = parser.parse_args()
 
@@ -447,29 +443,24 @@ if __name__ == "__main__":
     else:
         raise ValueError(f"Unknown model type: {model_type}")
     
+    wandb_run = wandb.init(
+        name=model_name.replace("/", "-"),
+        project="Crowd",
+        config={
+            "model_type": model_type, 
+            "model_name": model_name,
+            "batch_size": batch_size,
+            "num_samples": num_samples
+        }
+    )
+
     evaluator = BBQEvaluator(agent, batch_size)
+    result_table = wandb.Table(columns=["domain", "accuracy_score", "polarity_score", "bias_score", "total_count", "natural_count", "bias_count", "anti_bias_count"])
     
     for domain in ["age", "gender_identity", "disability_status", "nationality", "race_ethnicity", "religion", "ses", "sexual_orientation"] if domain == "all" else [domain]:
         print(f"[++] Evaluating [{domain}]...")
-        wandb.init(
-            project="Crowd",
-            config={
-                "model_type": model_type, 
-                "model_name": model_name,
-                "batch_size": batch_size,
-                "domain": domain,
-                "num_samples": num_samples
-            }
-        )
         scores = evaluator.evaluate(domain, num_samples)
-        print(f"[{domain}] acc: {scores[0]:.4f}, polarity: {scores[1]:.4f}, bias: {scores[2]:.4f}, total_count: {scores[3]}, natural_count: {scores[4]}, bias_count: {scores[5]}, anti_bias_count: {scores[6]}")
-        wandb.log({
-            "domain": domain,
-            "accuracy_score": scores[0],
-            "polarity_score": scores[1],
-            "bias_score": scores[2],
-            "total_count": scores[3],
-            "natural_count": scores[4],
-            "bias_count": scores[5],
-            "anti_bias_count": scores[6],
-        })
+        
+        print(f"[{domain}] accuracy_score: {scores[0]:.4f}, polarity_score: {scores[1]:.4f}, bias_score: {scores[2]:.4f}, total_count: {scores[3]}, natural_count: {scores[4]}, bias_count: {scores[5]}, anti_bias_count: {scores[6]}")
+        result_table.add_data(domain, scores[0], scores[1], scores[2], scores[3], scores[4], scores[5], scores[6])
+    wandb_run.log({f"results_{model_name.replace('/', '-')}": result_table})
