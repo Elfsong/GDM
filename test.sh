@@ -1,9 +1,13 @@
+
+
+# for domain in ["age", "gender_identity", "disability_status", "nationality", "race_ethnicity", "religion", "ses", "sexual_orientation"]:
+
 # LlamaAgent
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-8B-Instruct --domain all
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct --domain all
 python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-1B-Instruct --domain all
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-70B-Instruct --domain all
+python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct --domain all
+python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-8B-Instruct --domain all
 python crowd.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-8B-Instruct --domain all
+python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-70B-Instruct --domain all
 python crowd.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-70B-Instruct --domain all
 
 # MixtralAgent
