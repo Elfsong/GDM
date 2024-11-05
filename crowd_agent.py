@@ -7,10 +7,13 @@ import re
 import json
 import torch
 from openai import OpenAI
+from pydantic import BaseModel
 from transformers import pipeline
 from vllm import LLM, SamplingParams
 from transformers import BitsAndBytesConfig
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from lmformatenforcer import JsonSchemaParser
+from lmformatenforcer.integrations.vllm import build_vllm_logits_processor, build_vllm_token_enforcer_tokenizer_data
 
 class AgentManager:
     def __init__(self):
@@ -36,13 +39,18 @@ class AgentManager:
         else:
             raise ValueError(f"Unknown model type: {model_type}")
 
+class AnswerFormat(BaseModel):
+    answer_id: int
 class BaseAgent:
     def __init__(self, model_name, enable_vllm=False):
         self.model_name = model_name
         self.enable_vllm = enable_vllm
         if enable_vllm:
             print(f"Using VLLM for {model_name}")
-            self.pipe = OpenAI(base_url="http://localhost:8000/v1", api_key="token-123")
+            # self.pipe = OpenAI(base_url="http://localhost:8000/v1", api_key="token-123")
+            self.pipe = LLM(model=self.model_name, tensor_parallel_size=2, gpu_memory_utilization=0.9, download_dir='/mnt/data/', trust_remote_code=True)
+            self.json_parser = JsonSchemaParser(AnswerFormat.model_json_schema())
+            self.tokenizer_data = build_vllm_logits_processor(build_vllm_token_enforcer_tokenizer_data(self.pipe), self.json_parser)
         else:
             self.pipe = pipeline(
                 "text-generation",
@@ -52,7 +60,7 @@ class BaseAgent:
                 trust_remote_code=True,
             )
         
-    def get_json_str(self, content):
+    def get_json(self, content):            
         content = content.replace("\n", "")
         json_pattern = re.compile(r'\{(.*?)\}')
         match = json_pattern.search(content)
@@ -72,6 +80,10 @@ class BaseAgent:
         except Exception as e:
             print(f"Error: {e} <- [{model_output}]")
         return predict_label
+    
+    def postprocess_impl(self, model_output):
+        model_output = self.get_json(model_output)
+        return int(model_output['answer_id'])
 
     def inference(self, model_inputs, max_new_tokens, temperature):
         do_sample = temperature > 0.0
@@ -90,12 +102,20 @@ class BaseAgent:
         return model_outputs
     
     def vllm_inference(self, model_input, max_new_tokens, temperature):
-        completion = self.pipe.chat.completions.create(
-            model=self.model_name,
-            temperature=temperature,
-            messages=model_input
+        # completion = self.pipe.chat.completions.create(
+        #     model=self.model_name,
+        #     temperature=temperature,
+        #     messages=model_input
+        # )
+        # return completion.choices[0].message.content
+        
+        completion = self.pipe.chat(
+            messages=model_input,
+            sampling_params = SamplingParams(logits_processors = [self.tokenizer_data], temperature=temperature)
         )
-        return completion.choices[0].message.content
+        
+        output = completion[0].outputs[0].text
+        return output
     
     def query_constructor(self, sample):
         context = sample['context']
@@ -116,11 +136,6 @@ class LlamaAgent(BaseAgent):
         ]
         return model_input
     
-    def postprocess_impl(self, model_output):
-        model_output = model_output[0]["generated_text"][-1]
-        predict_label = json.loads(model_output['content'])['answer_id']
-        return int(predict_label)
-    
 class MixtralAgent(BaseAgent):
     def __init__(self, model_name, enable_vllm=False):
         print(f"MixtralAgent: {model_name}")
@@ -133,10 +148,6 @@ class MixtralAgent(BaseAgent):
         ]
         return model_input
     
-    def postprocess_impl(self, model_output):
-        model_output = self.get_json_str(model_output[0]["generated_text"][-1]['content'])
-        return int(model_output['answer_id'])
-    
 class QwenAgent(BaseAgent):
     def __init__(self, model_name, enable_vllm=False):
         print(f"QwenAgent: {model_name}")
@@ -148,10 +159,6 @@ class QwenAgent(BaseAgent):
             {"role": "user", "content": query}
         ]
         return model_input
-    
-    def postprocess_impl(self, model_output):
-        model_output = self.get_json_str(model_output[0]["generated_text"][-1]['content'])
-        return int(model_output['answer_id'])
     
 class YiAgent(BaseAgent):
     def __init__(self, model_name, enable_vllm=False):
@@ -219,12 +226,6 @@ class CohereAgent(BaseAgent):
         ]
         return model_input
     
-    def postprocess_impl(self, model_output):
-        model_output = model_output[0]["generated_text"][-1]
-        model_output = model_output['content'].split("\n\n")[0].strip()
-        model_output = self.get_json_str(model_output)
-        return int(model_output['answer_id'])
-    
 class GraniteAgent(BaseAgent):
     def __init__(self, model_name):
         print(f"GraniteAgent: {model_name}")
@@ -251,30 +252,20 @@ class GraniteAgent(BaseAgent):
         return int(model_output['answer_id'])
         
 class PhiAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"PhiAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
             {"role": "user", "content": query}
         ]
         return model_input
-    
-    def postprocess_impl(self, model_output):
-        model_output = model_output[0]["generated_text"][-1]
-        model_output = model_output['content'].split("\n\n")[0].strip()
-        model_output = self.get_json_str(model_output)
-        return int(model_output['answer_id'])
     
 class DeepSeekAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"DeepSeekAgent: {model_name}")
-        self.model_name = model_name
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, trust_remote_code=True, torch_dtype=torch.bfloat16).cuda()
-        self.model.generation_config = GenerationConfig.from_pretrained(self.model_name)
-        self.model.generation_config.pad_token_id = self.model.generation_config.eos_token_id
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
@@ -282,20 +273,20 @@ class DeepSeekAgent(BaseAgent):
         ]
         return model_input
     
-    def inference(self, model_input, max_new_tokens=24, temperature=0.0):
-        input_tensor = self.tokenizer.apply_chat_template(model_input, add_generation_prompt=True, return_tensors="pt")
-        model_output = self.model.generate(input_tensor.to(self.model.device), max_new_tokens=max_new_tokens)
-        model_output = self.tokenizer.decode(model_output[0][input_tensor.shape[1]:], skip_special_tokens=True)
-        return model_output
+    # def inference(self, model_input, max_new_tokens=24, temperature=0.0):
+    #     input_tensor = self.tokenizer.apply_chat_template(model_input, add_generation_prompt=True, return_tensors="pt")
+    #     model_output = self.model.generate(input_tensor.to(self.model.device), max_new_tokens=max_new_tokens)
+    #     model_output = self.tokenizer.decode(model_output[0][input_tensor.shape[1]:], skip_special_tokens=True)
+    #     return model_output
     
-    def postprocess_impl(self, model_output):
-        model_output = self.get_json_str(model_output)
-        return int(model_output['answer_id'])
+    # def postprocess_impl(self, model_output):
+    #     model_output = self.get_json_str(model_output)
+    #     return int(model_output['answer_id'])
     
 class DollyAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"DollyAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
     
     def inference(self, model_input, max_new_tokens, temperature):
         do_sample = temperature > 0.0
@@ -327,42 +318,23 @@ class DollyAgent(BaseAgent):
         return int(model_output['answer_id'])
 
 class GemmaAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"GemmaAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
             {"role": "user", "content": query}
         ]
         return model_input
-    
-    def postprocess_impl(self, model_output):
-        model_output = model_output[0]["generated_text"][-1]['content']
-        model_output = self.get_json_str(model_output)
-        return int(model_output['answer_id'])
 
 class SarvamAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"SarvamAgent: {model_name}")
-        self.model_name = "deepseek-ai/DeepSeek-V2-Lite-Chat"
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_name, trust_remote_code=True, torch_dtype=torch.bfloat16).cuda()
-        self.model.generation_config = GenerationConfig.from_pretrained(self.model_name)
-        self.model.generation_config.pad_token_id = self.model.generation_config.eos_token_id
-        
+        super().__init__(model_name, enable_vllm)
+
     def preprocess(self, query):
         model_input = [
             {"role": "user", "content": query}
         ]
         return model_input
-    
-    def inference(self, model_input, max_new_tokens=24, temperature=0.0):
-        input_tensor = self.tokenizer.apply_chat_template(model_input, add_generation_prompt=True, return_tensors="pt")
-        model_output = self.model.generate(input_tensor.to(self.model.device), max_new_tokens=max_new_tokens)
-        model_output = self.tokenizer.decode(model_output[0][input_tensor.shape[1]:], skip_special_tokens=True)
-        return model_output
-    
-    def postprocess_impl(self, model_output):
-        model_output = self.get_json_str(model_output)
-        return int(model_output['answer_id'])
