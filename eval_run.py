@@ -4,7 +4,7 @@
 # Date: 2024-10-28
 
 import os
-# os.environ['HF_HUB_CACHE'] = '/mnt/data'
+os.environ['HF_HUB_CACHE'] = '/mnt/data'
 os.environ['HF_HUB_ENABLE_HF_TRANSFER'] = '1'
 
 import wandb
@@ -12,13 +12,12 @@ import argparse
 import crowd_eval
 import crowd_agent
 
-
 parser = argparse.ArgumentParser(description="Run the BBQEvaluator with specified agent.")
 parser.add_argument('--model-type', type=str, required=True, help='Type of the model to use')
 parser.add_argument('--model-name', type=str, required=True, help='Name of the model to use')
 parser.add_argument('--domain', type=str, default="all", help='Domain to evaluate')
 parser.add_argument('--batch-size', type=int, default=32, help='Batch size')
-parser.add_argument('--num-samples', type=int, default=256, help='Number of samples')
+parser.add_argument('--num-samples', type=int, default=1024, help='Number of samples')
 args = parser.parse_args()
 
 wandb_run = wandb.init(
@@ -36,9 +35,10 @@ agent_manager = crowd_agent.AgentManager()
 agent = agent_manager.get_agent(args.model_type, args.model_name)
 evaluator = crowd_eval.BBQEvaluator(agent, args.batch_size)
 result_table = wandb.Table(columns=["domain", "accuracy_score", "polarity_score", "bias_score", "total_count", "natural_count", "bias_count", "anti_bias_count", "error_count"])
-    
-for domain in ["age", "gender_identity", "disability_status", "nationality", "race_ethnicity", "religion", "ses", "sexual_orientation"] if args.domain == "all" else [args.domain]:
-    print(f"[++] Evaluating [{domain}]...")
+
+domains = ["age", "gender_identity", "disability_status", "nationality", "race_ethnicity", "religion", "ses", "sexual_orientation"]
+for index, domain in enumerate(domains):
+    print(f"[+] Evaluating [{domain}] [{index + 1}/{len(domains)}]...")
     scores = evaluator.evaluate(domain, args.num_samples)
     
     print(f"[{domain}] accuracy_score: {scores[0]:.4f}, polarity_score: {scores[1]:.4f}, bias_score: {scores[2]:.4f}, total_count: {scores[3]}, natural_count: {scores[4]}, bias_count: {scores[5]}, anti_bias_count: {scores[6]}, error_count: {scores[7]}")

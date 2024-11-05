@@ -3,80 +3,80 @@
 # for domain in ["age", "gender_identity", "disability_status", "nationality", "race_ethnicity", "religion", "ses", "sexual_orientation"]:
 
 # LlamaAgent
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-1B-Instruct
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-8B-Instruct
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-8B-Instruct
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-70B-Instruct
-python crowd.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-70B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-1B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-8B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-8B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-70B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-70B-Instruct
 
 # MixtralAgent
-python crowd.py --model-type MixtralAgent --model-name mistralai/Mixtral-8x7B-Instruct-v0.1
-python crowd.py --model-type MixtralAgent --model-name mistralai/Mistral-7B-Instruct-v0.2 
-python crowd.py --model-type MixtralAgent --model-name mistralai/Mixtral-8x22B-Instruct-v0.1 
-python crowd.py --model-type MixtralAgent --model-name mistralai/Mistral-7B-Instruct-v0.3 
-python crowd.py --model-type MixtralAgent --model-name mistralai/Mistral-Nemo-Instruct-2407 
+python eval_run.py --model-type MixtralAgent --model-name mistralai/Mixtral-8x7B-Instruct-v0.1
+python eval_run.py --model-type MixtralAgent --model-name mistralai/Mistral-7B-Instruct-v0.2 
+python eval_run.py --model-type MixtralAgent --model-name mistralai/Mixtral-8x22B-Instruct-v0.1 
+python eval_run.py --model-type MixtralAgent --model-name mistralai/Mistral-7B-Instruct-v0.3 
+python eval_run.py --model-type MixtralAgent --model-name mistralai/Mistral-Nemo-Instruct-2407 
 
 # QwenAgent
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2-7B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-0.5B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-1.5B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-3B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-7B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-14B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-32B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2.5-72B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2-0.5B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2-1.5B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2-7B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen2-72B-Instruct
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen1.5-4B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen1.5-14B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen1.5-32B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen1.5-72B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen-1_8B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen-7B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen-14B-Chat
-python crowd.py --model-type QwenAgent --model-name Qwen/Qwen-72B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2-7B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-0.5B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-1.5B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-3B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-7B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-14B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-32B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2.5-72B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2-0.5B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2-1.5B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2-7B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen2-72B-Instruct
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen1.5-4B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen1.5-14B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen1.5-32B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen1.5-72B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen-1_8B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen-7B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen-14B-Chat
+python eval_run.py --model-type QwenAgent --model-name Qwen/Qwen-72B-Chat
 
 # YiAgent
-python crowd.py --model-type YiAgent --model-name 01-ai/Yi-1.5-6B-Chat
-python crowd.py --model-type YiAgent --model-name 01-ai/Yi-1.5-9B-Chat
-python crowd.py --model-type YiAgent --model-name 01-ai/Yi-1.5-34B-Chat 
+python eval_run.py --model-type YiAgent --model-name 01-ai/Yi-1.5-6B-Chat
+python eval_run.py --model-type YiAgent --model-name 01-ai/Yi-1.5-9B-Chat
+python eval_run.py --model-type YiAgent --model-name 01-ai/Yi-1.5-34B-Chat 
 
 # DeepSeekAgent
-python crowd.py --model-type DeepSeekAgent --model-name deepseek-ai/DeepSeek-V2-Lite-Chat
-python crowd.py --model-type DeepSeekAgent --model-name deepseek-ai/DeepSeek-V2-Chat
+python eval_run.py --model-type DeepSeekAgent --model-name deepseek-ai/DeepSeek-V2-Lite-Chat
+python eval_run.py --model-type DeepSeekAgent --model-name deepseek-ai/DeepSeek-V2-Chat
 
 # GemmaAgent
-python crowd.py --model-type GemmaAgent --model-name google/gemma-2-2b-it
-python crowd.py --model-type GemmaAgent --model-name google/gemma-2-9b-it
-python crowd.py --model-type GemmaAgent --model-name google/gemma-2-27b-it
+python eval_run.py --model-type GemmaAgent --model-name google/gemma-2-2b-it
+python eval_run.py --model-type GemmaAgent --model-name google/gemma-2-9b-it
+python eval_run.py --model-type GemmaAgent --model-name google/gemma-2-27b-it
 
 # DollyAgent
-python crowd.py --model-type DollyAgent --model-name Databricks/dolly-v2-7b
-python crowd.py --model-type DollyAgent --model-name Databricks/dolly-v2-12b
+python eval_run.py --model-type DollyAgent --model-name Databricks/dolly-v2-7b
+python eval_run.py --model-type DollyAgent --model-name Databricks/dolly-v2-12b
 
 # FalconAgent
-python crowd.py --model-type FalconAgent --model-name tiiuae/falcon-7b-instruct
-python crowd.py --model-type FalconAgent --model-name tiiuae/falcon-40b-instruct   
+python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-7b-instruct
+python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-40b-instruct   
 
 # CohereAgent
-python crowd.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-8b
-python crowd.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-32b
-python crowd.py --model-type CohereAgent --model-name CohereForAI/aya-23-8B
-python crowd.py --model-type CohereAgent --model-name CohereForAI/aya-23-35B
+python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-8b
+python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-32b
+python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-23-8B
+python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-23-35B
 
 # GraniteAgent
-python crowd.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-2b-instruct
-python crowd.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-8b-instruct
+python eval_run.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-2b-instruct
+python eval_run.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-8b-instruct
 
 # PhiAgent
-python crowd.py --model-type PhiAgent --model-name microsoft/phi-3.5-mini-instruct
-python crowd.py --model-type PhiAgent --model-name microsoft/Phi-3-mini-4k-instruct
-python crowd.py --model-type PhiAgent --model-name microsoft/Phi-3-small-8k-instruct
-python crowd.py --model-type PhiAgent --model-name microsoft/Phi-3-medium-4k-instruct
+python eval_run.py --model-type PhiAgent --model-name microsoft/phi-3.5-mini-instruct
+python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-mini-4k-instruct
+python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-small-8k-instruct
+python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-medium-4k-instruct
 
 # SarvamAgent
-python crowd.py --model-type SarvamAgent --model-name sarvamai/sarvam-1
-python crowd.py --model-type SarvamAgent --model-name sarvamai/sarvam-2b-v0.5
+python eval_run.py --model-type SarvamAgent --model-name sarvamai/sarvam-1
+python eval_run.py --model-type SarvamAgent --model-name sarvamai/sarvam-2b-v0.5

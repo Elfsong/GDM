@@ -4,3 +4,5 @@ sudo mount /dev/md0 /mnt/data/
 sudo chmod a+w /mnt/data/
 
 echo "Cache Dir Mounted [/mnt/data/]"
+
+sudo localedef -i en_US -f UTF-8 en_US.UTF-8

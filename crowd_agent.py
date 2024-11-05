@@ -6,7 +6,9 @@
 import re
 import json
 import torch
+from openai import OpenAI
 from transformers import pipeline
+from vllm import LLM, SamplingParams
 from transformers import BitsAndBytesConfig
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 
@@ -30,20 +32,25 @@ class AgentManager:
         
     def get_agent(self, model_type, model_name):
         if model_type in self.agent_classes:
-            return self.agent_classes[model_type](model_name)
+            return self.agent_classes[model_type](model_name, enable_vllm=True)
         else:
             raise ValueError(f"Unknown model type: {model_type}")
 
 class BaseAgent:
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         self.model_name = model_name
-        self.pipe = pipeline(
-            "text-generation",
-            model=self.model_name,
-            model_kwargs={"quantization_config": BitsAndBytesConfig(load_in_8bit=True)},
-            device_map="auto",
-            trust_remote_code=True,
-        )
+        self.enable_vllm = enable_vllm
+        if enable_vllm:
+            print(f"Using VLLM for {model_name}")
+            self.pipe = OpenAI(base_url="http://localhost:8000/v1", api_key="token-123")
+        else:
+            self.pipe = pipeline(
+                "text-generation",
+                model=self.model_name,
+                model_kwargs={"quantization_config": BitsAndBytesConfig(load_in_8bit=True)},
+                device_map="auto",
+                trust_remote_code=True,
+            )
         
     def get_json_str(self, content):
         content = content.replace("\n", "")
@@ -82,6 +89,14 @@ class BaseAgent:
         )
         return model_outputs
     
+    def vllm_inference(self, model_input, max_new_tokens, temperature):
+        completion = self.pipe.chat.completions.create(
+            model=self.model_name,
+            temperature=temperature,
+            messages=model_input
+        )
+        return completion.choices[0].message.content
+    
     def query_constructor(self, sample):
         context = sample['context']
         question = sample['question']
@@ -90,9 +105,9 @@ class BaseAgent:
         return query
 
 class LlamaAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"LlamaAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
@@ -107,9 +122,9 @@ class LlamaAgent(BaseAgent):
         return int(predict_label)
     
 class MixtralAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"MixtralAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
@@ -123,9 +138,9 @@ class MixtralAgent(BaseAgent):
         return int(model_output['answer_id'])
     
 class QwenAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"QwenAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
@@ -139,9 +154,9 @@ class QwenAgent(BaseAgent):
         return int(model_output['answer_id'])
     
 class YiAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"YiAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [
@@ -151,13 +166,13 @@ class YiAgent(BaseAgent):
         return model_input
     
     def postprocess_impl(self, model_output):
-        model_output = self.get_json_str(model_output[0]["generated_text"][-1]['content'])
+        model_output = self.get_json_str(model_output)
         return int(model_output['answer_id'])
 
 class BloomAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"BloomAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         return query
@@ -174,9 +189,9 @@ class BloomAgent(BaseAgent):
         return int(model_output['answer_id'])
 
 class FalconAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"FalconAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         return query
@@ -194,9 +209,9 @@ class FalconAgent(BaseAgent):
         return int(model_output['answer_id'])
     
 class CohereAgent(BaseAgent):
-    def __init__(self, model_name):
+    def __init__(self, model_name, enable_vllm=False):
         print(f"CohereAgent: {model_name}")
-        super().__init__(model_name)
+        super().__init__(model_name, enable_vllm)
         
     def preprocess(self, query):
         model_input = [

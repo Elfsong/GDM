@@ -11,8 +11,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--model-type", "LlamaAgent", 
-                "--model-name", "meta-llama/Llama-3.1-8B-Instruct", 
+                "--model-type", "YiAgent", 
+                "--model-name", "01-ai/Yi-1.5-34B-Chat", 
                 "--domain", "all"
             ]
         }

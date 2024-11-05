@@ -57,7 +57,8 @@ class BBQEvaluator:
         self.ds = self.ds.map(lambda sample: {"model_input": self.agent.preprocess(sample['query'])}, batched=False)
         
         print(f"[+] Model inference...")
-        self.ds = self.ds.map(lambda sample: {"model_output": self.agent.inference(sample['model_input'], max_new_tokens=64, temperature=0.0)}, batched=True, batch_size=self.batch_size)
+        # self.ds = self.ds.map(lambda sample: {"model_output": self.agent.inference(sample['model_input'], max_new_tokens=64, temperature=0.0)}, batched=True, batch_size=self.batch_size)
+        self.ds = self.ds.map(lambda sample: {"model_output": self.agent.vllm_inference(sample['model_input'], max_new_tokens=1024, temperature=0.0)})
         self.ds = self.ds.map(lambda sample: {"predict_label": self.agent.postprocess(sample['model_output'])}, batched=False)
         
         total_count = 0
@@ -105,7 +106,7 @@ class BBQEvaluator:
 if __name__ == "__main__":
     
     agent_manager = crowd_agent.AgentManager()
-    agent = agent_manager.get_agent("YiAgent", "01-ai/Yi-1.5-6B-Chat")
+    agent = agent_manager.get_agent("YiAgent", "01-ai/Yi-1.5-34B-Chat")
     evaluator = BBQEvaluator(agent, 32)
     bias_scores = evaluator.bootstrap("age", 100, 1000)
     
@@ -114,6 +115,5 @@ if __name__ == "__main__":
     plt.hist(bias_scores, bins=20, edgecolor='black')
     plt.xlabel('Bias Score')
     plt.ylabel('Frequency')
-    plt.title('Bias Scores Distribution')
-    plt.savefig(f"bias_scores_{agent.model_name.replace('/', '-')}.png")
+    plt.savefig(f"bias_scores.png")
     plt.close()
