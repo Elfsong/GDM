@@ -46,7 +46,7 @@ class BaseAgent:
         self.model_name = model_name
         self.enable_vllm = enable_vllm
         if enable_vllm:
-            print(f"[+]Loading {model_name} with vLLM...")
+            print(f"[+] Loading {model_name} with vLLM...")
             self.pipe = LLM(model=self.model_name, tensor_parallel_size=2, gpu_memory_utilization=0.9, download_dir='/mnt/data/', trust_remote_code=True)
             
             print(f"[+] Processing tokenizer data for format enforcement...")
@@ -117,6 +117,7 @@ class BaseAgent:
         )
         
         output = completion[0].outputs[0].text
+        # print(output)
         return output
     
     def query_constructor(self, sample):
