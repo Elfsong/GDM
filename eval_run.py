@@ -17,12 +17,12 @@ parser.add_argument('--model-type', type=str, required=True, help='Type of the m
 parser.add_argument('--model-name', type=str, required=True, help='Name of the model to use')
 parser.add_argument('--domain', type=str, default="all", help='Domain to evaluate')
 parser.add_argument('--batch-size', type=int, default=32, help='Batch size')
-parser.add_argument('--num-samples', type=int, default=64, help='Number of samples')
+parser.add_argument('--num-samples', type=int, default=1024, help='Number of samples')
 args = parser.parse_args()
 
 wandb_run = wandb.init(
     name=args.model_name.replace("/", "-"),
-    project="Crowd",
+    project="NewCrowd",
     config={
         "model_type": args.model_type, 
         "model_name": args.model_name,

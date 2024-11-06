@@ -1,7 +1,3 @@
-
-
-# for domain in ["age", "gender_identity", "disability_status", "nationality", "race_ethnicity", "religion", "ses", "sexual_orientation"]:
-
 # LlamaAgent
 python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-1B-Instruct
 python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct
@@ -53,30 +49,14 @@ python eval_run.py --model-type GemmaAgent --model-name google/gemma-2-2b-it
 python eval_run.py --model-type GemmaAgent --model-name google/gemma-2-9b-it
 python eval_run.py --model-type GemmaAgent --model-name google/gemma-2-27b-it
 
-# DollyAgent
-python eval_run.py --model-type DollyAgent --model-name Databricks/dolly-v2-7b
-python eval_run.py --model-type DollyAgent --model-name Databricks/dolly-v2-12b
-
-# FalconAgent
-python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-7b-instruct
-python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-40b-instruct   
-
 # CohereAgent
 python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-8b
 python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-expanse-32b
 python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-23-8B
 python eval_run.py --model-type CohereAgent --model-name CohereForAI/aya-23-35B
 
-# GraniteAgent
-python eval_run.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-2b-instruct
-python eval_run.py --model-type GraniteAgent --model-name ibm-granite/granite-3.0-8b-instruct
-
 # PhiAgent
 python eval_run.py --model-type PhiAgent --model-name microsoft/phi-3.5-mini-instruct
 python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-mini-4k-instruct
 python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-small-8k-instruct
 python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-medium-4k-instruct
-
-# SarvamAgent
-python eval_run.py --model-type SarvamAgent --model-name sarvamai/sarvam-1
-python eval_run.py --model-type SarvamAgent --model-name sarvamai/sarvam-2b-v0.5

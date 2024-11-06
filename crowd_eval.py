@@ -58,7 +58,7 @@ class BBQEvaluator:
         
         print(f"[+] Model inference...")
         # self.ds = self.ds.map(lambda sample: {"model_output": self.agent.inference(sample['model_input'], max_new_tokens=64, temperature=0.0)}, batched=True, batch_size=self.batch_size)
-        self.ds = self.ds.map(lambda sample: {"model_output": self.agent.vllm_inference(sample['model_input'], max_new_tokens=1024, temperature=0.0)})
+        self.ds = self.ds.map(lambda sample: {"model_output": self.agent.vllm_inference(sample['model_input'], max_new_tokens=64, temperature=0.0)})
         self.ds = self.ds.map(lambda sample: {"predict_label": self.agent.postprocess(sample['model_output'])}, batched=False)
         
         total_count = 0
