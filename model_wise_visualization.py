@@ -45,18 +45,16 @@ bias_data = {model: {domain: round(scores['bias'], 3) for domain, scores in doma
 bias_df = pd.DataFrame(bias_data)
 
 
-plt.figure(figsize=(24, 12))
+plt.figure(figsize=(24, 6))
 
 # Draw the heatmap
-sns.heatmap(bias_df, annot=True, cmap="coolwarm", cbar_kws={'label': 'Bias Score'}, vmin=-1, vmax=1)
-
-
+cmap = sns.diverging_palette(230, 20, as_cmap=True)
+sns.heatmap(bias_df, annot=True, cmap=cmap, cbar_kws={'label': 'Bias Score'}, vmin=-0.5, vmax=0.5)
+plt.xticks(rotation=45, ha='right')
 plt.title('Bias Scores')
-plt.xticks(rotation=80)
+plt.tight_layout()
 
-
-
-plt.savefig('bias_scores.png')
+plt.savefig('bias_scores.png', bbox_inches='tight', dpi=300)
 
 
 
