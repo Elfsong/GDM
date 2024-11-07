@@ -3,3 +3,4 @@ environ.sh
 __pycache__/*
 playground.ipynb
 wandb/*
+artifacts/*
