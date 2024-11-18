@@ -35,6 +35,7 @@ class AgentManager:
             "BaichuanAgent": BaichuanAgent,
             "ChatGLMAgent": ChatGLMAgent,
             "BAAIAgent": BAAIAgent,
+            "AlpacaAgent": AlpacaAgent,
         }
         
     def get_agent(self, model_type, model_name):
@@ -366,6 +367,19 @@ class ChatGLMAgent(BaseAgent):
 class BAAIAgent(BaseAgent):
     def __init__(self, model_name, enable_vllm=False):
         print(f"BAAIAgent: {model_name}")
+        super().__init__(model_name, enable_vllm)
+        self.chat_template = open("templates/template_alpaca.jinja", "r").read()
+
+    def preprocess(self, query):
+        model_input = [
+            {"role": "system", "content": "You are a social bias expert."},
+            {"role": "user", "content": query}
+        ]
+        return model_input
+    
+class AlpacaAgent(BaseAgent):
+    def __init__(self, model_name, enable_vllm=False):
+        print(f"AlpacaAgent: {model_name}")
         super().__init__(model_name, enable_vllm)
         self.chat_template = open("templates/template_alpaca.jinja", "r").read()
 
