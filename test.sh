@@ -3,22 +3,21 @@
 # python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.2-3B-Instruct
 # python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-8B-Instruct
 # python eval_run.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-8B-Instruct
+python eval_run.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-13B-Instruct
 # python eval_run.py --model-type LlamaAgent --model-name meta-llama/Llama-3.1-70B-Instruct
 # python eval_run.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-70B-Instruct
-python eval_run.py --model-type LlamaAgent --model-name lightblue/suzume-llama-3-8B-multilingual
+# python eval_run.py --model-type LlamaAgent --model-name lightblue/suzume-llama-3-8B-multilingual
 # python eval_run.py --model-type LlamaAgent --model-name arcee-ai/Llama-3.1-SuperNova-Lite
 # python eval_run.py --model-type LlamaAgent --model-name ValiantLabs/Llama3.1-8B-Enigma
-python eval_run.py --model-type LlamaAgent --model-name DeepMount00/Llama-3.1-8b-ITA
-python eval_run.py --model-type LlamaAgent --model-name shenzhi-wang/Llama3-8B-Chinese-Chat
-python eval_run.py --model-type LlamaAgent --model-name elinas/Llama-3-13B-Instruct
-python eval_run.py --model-type LlamaAgent --model-name meta-llama/Meta-Llama-3-13B-Instruct
-python eval_run.py --model-type LlamaAgent --model-name maum-ai/Llama-3-MAAL-8B-Instruct-v0.1
-python eval_run.py --model-type LlamaAgent --model-name mlx-community/Llama-3.1-8B-Instruct
-python eval_run.py --model-type LlamaAgent --model-name HuggingFaceTB/SmolLM2-1.7B-Instruct
-python eval_run.py --model-type LlamaAgent --model-name chuanli11/Llama-3.2-3B-Instruct-uncensored
-python eval_run.py --model-type LlamaAgent --model-name Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2
-python eval_run.py --model-type LlamaAgent --model-name georgesung/llama2_7b_chat_uncensored
-python eval_run.py --model-type LlamaAgent --model-name Tap-M/Luna-AI-Llama2-Uncensored
+# python eval_run.py --model-type LlamaAgent --model-name DeepMount00/Llama-3.1-8b-ITA
+# python eval_run.py --model-type LlamaAgent --model-name shenzhi-wang/Llama3-8B-Chinese-Chat
+# python eval_run.py --model-type LlamaAgent --model-name elinas/Llama-3-13B-Instruct
+# python eval_run.py --model-type LlamaAgent --model-name maum-ai/Llama-3-MAAL-8B-Instruct-v0.1
+# python eval_run.py --model-type LlamaAgent --model-name mlx-community/Llama-3.1-8B-Instruct
+# python eval_run.py --model-type LlamaAgent --model-name HuggingFaceTB/SmolLM2-1.7B-Instruct
+# python eval_run.py --model-type LlamaAgent --model-name chuanli11/Llama-3.2-3B-Instruct-uncensored
+# python eval_run.py --model-type LlamaAgent --model-name Orenguteng/Llama-3.1-8B-Lexi-Uncensored-V2
+
 
 # MixtralAgent
 # python eval_run.py --model-type MixtralAgent --model-name mistralai/Mixtral-8x7B-Instruct-v0.1
@@ -77,31 +76,31 @@ python eval_run.py --model-type LlamaAgent --model-name Tap-M/Luna-AI-Llama2-Unc
 # python eval_run.py --model-type PhiAgent --model-name microsoft/Phi-3-medium-4k-instruct
 
 # BAAIAgent
-python eval_run.py --model-type BAAIAgent --model-name BAAI/AquilaChat-7B
-python eval_run.py --model-type BAAIAgent --model-name BAAI/AquilaChat-7B
-python eval_run.py --model-type BAAIAgent --model-name BAAI/Emu3-Chat
+# python eval_run.py --model-type BAAIAgent --model-name BAAI/AquilaChat-7B
 
 # BaichuanAgent 
 # python eval_run.py --model-type BaichuanAgent --model-name baichuan-inc/Baichuan2-13B-Chat
 # python eval_run.py --model-type BaichuanAgent --model-name baichuan-inc/Baichuan2-7B-Chat
 
 # FalconAgent
-python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-7b-instruct
-python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-11B
-python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-40b-instruct
+# python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-7b-instruct
+# python eval_run.py --model-type FalconAgent --model-name tiiuae/falcon-40b-instruct
 
 # ChatGLMAgent
-python eval_run.py --model-type ChatGLMAgent --model-name THUDM/chatglm2-6b
-python eval_run.py --model-type ChatGLMAgent --model-name THUDM/glm-4-9b-chat
-python eval_run.py --model-type ChatGLMAgent --model-name THUDM/glm-4-9b-chat-1m
+# python eval_run.py --model-type ChatGLMAgent --model-name THUDM/chatglm2-6b
+# python eval_run.py --model-type ChatGLMAgent --model-name THUDM/glm-4-9b-chat
+# python eval_run.py --model-type ChatGLMAgent --model-name THUDM/glm-4-9b-chat-1m
 
 # BaseAgent
-python eval_run.py --model-type BaseAgent --model-name facebook/MobileLLM-1B
-python eval_run.py --model-type BaseAgent --model-name amd/AMD-OLMo-1B
-python eval_run.py --model-type BaseAgent --model-name ibm-granite/granite-3.0-8b-instruct
-python eval_run.py --model-type BaseAgent --model-name VongolaChouko/Starcannon-Unleashed-12B-v1.0
-python eval_run.py --model-type BaseAgent --model-name MarinaraSpaghetti/NemoMix-Unleashed-12B
-python eval_run.py --model-type BaseAgent --model-name ajibawa-2023/Uncensored-Frank-13B
+python eval_run.py --model-type AlpacaAgent --model-name facebook/MobileLLM-1B
+python eval_run.py --model-type AlpacaAgent --model-name amd/AMD-OLMo-1B
+# python eval_run.py --model-type AlpacaAgent --model-name ibm-granite/granite-3.0-8b-instruct
+python eval_run.py --model-type AlpacaAgent --model-name ibm-granite/granite-3.0-2b-instruct
+python eval_run.py --model-type AlpacaAgent --model-name VongolaChouko/Starcannon-Unleashed-12B-v1.0
+python eval_run.py --model-type AlpacaAgent --model-name MarinaraSpaghetti/NemoMix-Unleashed-12B
+python eval_run.py --model-type AlpacaAgent --model-name ajibawa-2023/Uncensored-Frank-13B
+python eval_run.py --model-type AlpacaAgent --model-name georgesung/llama2_7b_chat_uncensored
+python eval_run.py --model-type AlpacaAgent --model-name Tap-M/Luna-AI-Llama2-Uncensored
 
 
 
