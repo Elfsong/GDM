@@ -45,6 +45,7 @@ class AgentManager:
 
 class AnswerFormat(BaseModel):
     answer_id: int
+    
 class BaseAgent:
     def __init__(self, model_name, enable_vllm=False):
         self.model_name = model_name

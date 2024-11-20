@@ -3,4 +3,4 @@ Code for "Can Group Decision-Making Mitigates Social Bias in Large Language Mode
 
 `知己知彼 百战不殆`
 
-![GDM](GDM_v3.jpg)
+![GDM](images/GDM_v3.jpg)
