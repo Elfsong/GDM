@@ -163,7 +163,7 @@ class ModelRouterDataFactory:
                             "output": f"model_{self.model_list.index(model_name)}"
                         })
                     else:
-                        if random.random() < 0.2:
+                        if random.random() < 0.1:
                             data_pairs_test.append({
                                 "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nStatus: {sample['status']}\nModel:",
                                 "output": f"model_{self.model_list.index(model_name)}"
@@ -194,7 +194,7 @@ class ModelRouterDataFactory:
                             "output": f"{bias_domain}"
                         })
                     else:
-                        if random.random() < 0.2:
+                        if random.random() < 0.1:
                             data_pairs_test.append({
                                 "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nBias_Domain:",
                                 "output": f"{bias_domain}"
