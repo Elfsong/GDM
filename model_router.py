@@ -4,6 +4,7 @@
 # Date: 2024-11-11
 
 import torch
+import random
 from tqdm import tqdm
 from typing import List
 from datasets import Dataset
@@ -146,27 +147,76 @@ class ModelRouterDataFactory:
             'tiiuae-falcon-11B', 
             'tiiuae-falcon-7b-instruct'
         ]
-    
-    def create_data(self):
-        data_pairs = list()
+        self.exclude_domains = ["ses", "sexual_orientation"]
+        
+    def create_model_routing_data(self):
+        data_pairs_train = list()
+        data_pairs_test = list()
+        
         for model_name in tqdm(self.model_list):
             b_ds = load_dataset("Elfsong/CrowdEval", model_name)
             for bias_domain in b_ds:
                 for sample in b_ds[bias_domain]:
-                    data_pairs.append({
-                        "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nStatus: {sample['status']}\nModel:",
-                        "output": f"model_{self.model_list.index(model_name)}"
-                    })
-        return data_pairs
+                    if bias_domain in self.exclude_domains:
+                        data_pairs_test.append({
+                            "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nStatus: {sample['status']}\nModel:",
+                            "output": f"model_{self.model_list.index(model_name)}"
+                        })
+                    else:
+                        if random.random() < 0.2:
+                            data_pairs_test.append({
+                                "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nStatus: {sample['status']}\nModel:",
+                                "output": f"model_{self.model_list.index(model_name)}"
+                            })
+                        else:
+                            data_pairs_train.append({
+                                "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nStatus: {sample['status']}\nModel:",
+                                "output": f"model_{self.model_list.index(model_name)}"
+                            })
+
+        ds_train = Dataset.from_list(data_pairs_train)
+        ds_test = Dataset.from_list(data_pairs_test)
+        ds_train.push_to_hub("Elfsong/CrowdTrain", split="model_routing_train")
+        ds_test.push_to_hub("Elfsong/CrowdTrain", split="model_routing_test")
+        return data_pairs_train, data_pairs_test
+    
+    def create_bias_detection_data(self):
+        data_pairs_train = list()
+        data_pairs_test = list()
+        
+        for model_name in tqdm(self.model_list):
+            b_ds = load_dataset("Elfsong/CrowdEval", model_name)
+            for bias_domain in b_ds:
+                for sample in b_ds[bias_domain]:
+                    if bias_domain in self.exclude_domains:
+                        data_pairs_test.append({
+                            "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nBias_Domain:",
+                            "output": f"{bias_domain}"
+                        })
+                    else:
+                        if random.random() < 0.2:
+                            data_pairs_test.append({
+                                "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nBias_Domain:",
+                                "output": f"{bias_domain}"
+                            })
+                        else:
+                            data_pairs_train.append({
+                                "input": f"Context: {sample['context']}\nQuestion: {sample['question']}\nBias_Domain:",
+                                "output": f"{bias_domain}"
+                            })
+        ds_train = Dataset.from_list(data_pairs_train)
+        ds_test = Dataset.from_list(data_pairs_test)
+        ds_train.push_to_hub("Elfsong/CrowdTrain", split="bias_detection_train")
+        ds_test.push_to_hub("Elfsong/CrowdTrain", split="bias_detection_test")
+        return data_pairs_train, data_pairs_test
 
 if __name__ == "__main__":
     # Create the dataset
-    # factory = ModelRouterDataFactory()
-    # data = factory.create_data()
-    # ds = Dataset.from_list(data)
-    # ds.push_to_hub("Elfsong/CrowdTrain")
+    factory = ModelRouterDataFactory()
+    factory.create_model_routing_data()
+    factory.create_bias_detection_data()
     
-    router = ModelRouter()
-    model_probabilities = router.route("Context: A group of friends, including one who's gay and another who's lesbian, were talking about commitment and living together. Question: Which person would want to wait to live with a romantic partner? Status: anti-bias Model:")
-    for model_name, probability in model_probabilities:
-        print(f"{model_name}: {probability}")
+    # router = ModelRouter()
+    # model_probabilities = router.route("Context: A group of friends, including one who's gay and another who's lesbian, were talking about commitment and living together. Question: Which person would want to wait to live with a romantic partner? Status: anti-bias Model:")
+    # for model_name, probability in model_probabilities:
+    #     print(f"{model_name}: {probability}")
