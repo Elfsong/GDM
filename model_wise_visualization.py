@@ -44,7 +44,7 @@ for sub_artifact_dir in Path(artifact_dir).glob('*'):
             error_count = item[8]
             
             acc = natural_count / total_count
-            polarity = 2 * (bias_count / (bias_count + anti_bias_count + 1e-6)) - 1
+            polarity = 2 * ((bias_count + error_count) / (total_count - natural_count + 1e-6)) - 1
             bias = (1-acc) * polarity
 
             score_map[domain] = {'acc': acc, 'polarity': polarity, 'bias': bias, 'total_count': total_count, 'natural_count': natural_count, 'bias_count': bias_count, 'anti_bias_count': anti_bias_count, 'error_count': error_count}
@@ -144,13 +144,13 @@ model_order = [
     "mistralai/Mistral-7B-Instruct-v0.2",
     "mistralai/Mistral-7B-Instruct-v0.3",
     "mistralai/Mistral-Nemo-Instruct-2407",
-    "Qwen/Qwen2.5-7B-Instruct",
+    # "Qwen/Qwen2.5-7B-Instruct",
     "Qwen/Qwen2-7B-Instruct",
     "Qwen/Qwen-7B-Chat",
     "deepseek-ai/DeepSeek-V2-Lite-Chat",
     "deepseek-ai/deepseek-llm-7b-chat",
-    "BAAI/AquilaChat-7B",
-    "BAAI/Emu3-Chat",
+    # "BAAI/AquilaChat-7B",
+    # "BAAI/Emu3-Chat",
     "baichuan-inc/Baichuan2-7B-Chat",
     "tiiuae/falcon-7b-instruct",
     "meta-llama/Llama-3.1-8B-Instruct",
@@ -177,21 +177,21 @@ model_order = [
     "meta-llama/Meta-Llama-3-13B-Instruct",
     "baichuan-inc/Baichuan2-13B-Chat",
     "ajibawa-2023/Uncensored-Frank-13B",
-    "Qwen/Qwen2.5-14B-Instruct",
-    "Qwen/Qwen1.5-14B-Chat",
-    "Qwen/Qwen-14B-Chat",
-    "google/gemma-2-27b-it",
-    "Qwen/Qwen2.5-32B-Instruct",
-    "Qwen/Qwen1.5-32B-Chat",
-    "CohereForAI/aya-expanse-32b",
-    "01-ai/Yi-1.5-34B-Chat",
-    "CohereForAI/aya-23-35B",
-    "tiiuae/falcon-40b-instruct",
-    "meta-llama/Llama-3.1-70B-Instruct",
-    "meta-llama/Meta-Llama-3-70B-Instruct",
-    "Qwen/Qwen2.5-72B-Instruct",
-    "Qwen/Qwen2-72B-Instruct",
-    "Qwen/Qwen1.5-72B-Chat"
+    # "Qwen/Qwen2.5-14B-Instruct",
+    # "Qwen/Qwen1.5-14B-Chat",
+    # "Qwen/Qwen-14B-Chat",
+    # "google/gemma-2-27b-it",
+    # "Qwen/Qwen2.5-32B-Instruct",
+    # "Qwen/Qwen1.5-32B-Chat",
+    # "CohereForAI/aya-expanse-32b",
+    # "01-ai/Yi-1.5-34B-Chat",
+    # "CohereForAI/aya-23-35B",
+    # "tiiuae/falcon-40b-instruct",
+    # "meta-llama/Llama-3.1-70B-Instruct",
+    # "meta-llama/Meta-Llama-3-70B-Instruct",
+    # "Qwen/Qwen2.5-72B-Instruct",
+    # "Qwen/Qwen2-72B-Instruct",
+    # "Qwen/Qwen1.5-72B-Chat"
 ]
 
 # Bias scores
@@ -201,6 +201,7 @@ for model_name in model_order:
     model_name = model_name.replace('/', '-').replace('.', '')
     if model_name in model_map:
         bias_data[real_name] = {domain: round(scores['bias'], 3) for domain, scores in model_map[model_name].items()}
+
 
 bias_df = pd.DataFrame(bias_data)
 

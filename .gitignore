@@ -4,3 +4,4 @@ __pycache__/*
 playground.ipynb
 wandb/*
 artifacts/*
+bias_wise_visualization.ipynb
